@@ -10,6 +10,19 @@
 -------------------------------------------------
 """
 
+"""
+-------------------------------------------------
+修改人：孟庭冉
+功能描述：
+    新增了初始电量、目标电量、当前电量，并在对象初始化时为他们设定了的随机范围；
+    完成了充电相关的方法，包括充电速度、充电方法，可以通过get_charging_speed()获取汽车当前充电速度（充电速度随电量递减）；
+    明确了charge方法被调用的频率（每隔一段单位时间调用一次）
+
+下一步：
+    完善充电机器人耗电函数，明确充电机器人相应的参数
+    完成充电机器人与充电站之间层次的关系，机器人隶属于不同充电站（动态）
+-------------------------------------------------
+"""
 import math
 import random
 
@@ -35,6 +48,11 @@ class Vehicle:
         self.state = "entering"
         self.parked_time = None
         self.bound_spot = None
+
+        # 电量特性
+        self.initial_battery_level = random.randint(1, 50)  # 初始电量随机设定在1到50之间
+        self.current_battery = self.initial_battery_level  # 当前电量初始与初始电量相同
+        self.target_battery_level = random.randint(self.initial_battery_level, 100)  # 目标电量介于初始电量和100之间随机
 
         # 随机分配方向：True=顺时针(内道)，False=逆时针(外道)
         self.clockwise = random.choice([True, False])
@@ -146,8 +164,9 @@ class Vehicle:
         self._update_orientation()
         self._detect_road_side()
 
+    # 朝向和道路边相关方法
     def _update_orientation(self):
-        if self.state in ("entering", "exiting") and self.route:
+        if self.state in ("entering", "exiting") and self.route: # 仅在 entering/exiting 时更新
             cx, cy = self.position
             nx, ny = self.route[0]
             self.orientation = "horizontal" if nx != cx else "vertical"
@@ -185,8 +204,37 @@ class Vehicle:
         else:
             return (0, 0)
 
+    # 位置和状态相关方法
+    def get_current_position(self):
+        return self.position
+
     def get_current_orientation(self):
         return self.orientation
 
     def get_debug_info(self):
         return f"State={self.state}, pos={self.position}, road_side={self.road_side}"
+    
+    # 电量特性相关方法
+    def get_initial_battery_level(self):
+        return self.initial_battery_level
+
+    def get_current_battery(self):
+        return self.current_battery
+
+    def get_target_battery_level(self):
+        return self.target_battery_level
+
+    def update_battery_level(self, amount):
+        self.current_battery = min(self.current_battery + amount, self.target_battery_level)
+
+    # 充电相关方法, 充电速度指单位时间充上的电量，当处于充电状态时，每隔。。。。。时间调用一次charge方法，代表单位时间内充电一次
+    def charge(self):
+        self.current_battery = min(self.current_battery + self.get_charging_speed(), 100)
+        if self.current_battery == 100:
+            self.charging_status = "charged"
+        else:
+            self.charging_status = "charging"
+
+    # 充电速度由当前汽车的电量决定，电量越低充电速度越快，电量越高充电速度越慢
+    def get_charging_speed(self):
+        return 100 - 0.5*self.current_battery
