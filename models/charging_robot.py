@@ -31,7 +31,7 @@ class ChargingRobot:
     def charge_vehicle(self):
         """ 充电机器人给车辆充电，消耗自身电量 """
         if self.target_vehicle and self.status == "charging":
-            charge_amount = self.target_vehicle.charging_speed()
+            charge_amount = self.target_vehicle.get_charging_speed()
             self.target_vehicle.charge(charge_amount)
 
             # 机器人电量消耗受 车辆电池系数 影响
