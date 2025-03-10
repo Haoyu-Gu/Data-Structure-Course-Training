@@ -1,3 +1,14 @@
+"""
+-------------------------------------------------
+文件名：charging_robot.py
+创作人：顾昊瑜
+日期：2025年3月
+功能描述：
+    该模块定义了充电机器人 (`ChargingRobot`)，用于为园区内停在车位上的车辆提供自动充电服务。
+    机器人具备移动能力，可以前往指定车辆并执行充电任务，充电过程受充电速度、电池系数、调度策略等因素影响。
+-------------------------------------------------
+"""
+
 class ChargingRobot:
     def __init__(self, robot_id, position, battery_level=100, max_battery=100, move_speed=2, 
                  charge_efficiency=0.95, min_battery_threshold=20, station_position=None):

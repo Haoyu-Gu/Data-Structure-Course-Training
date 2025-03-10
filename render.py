@@ -1,3 +1,15 @@
+"""
+-------------------------------------------------
+文件名：render.py
+创作人：顾昊瑜
+日期：2025年3月
+功能描述：
+    该模块使用 PyQt5 进行可视化渲染，动态展示园区的布局和车辆移动情况。
+    - 采用 100ms 刷新率，实时更新车辆位置
+    - 可视化园区结构，包括道路、车位、建筑、大门、充电桩
+    - 动态展示车辆的行驶过程
+-------------------------------------------------
+"""
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtGui import QPainter, QColor
