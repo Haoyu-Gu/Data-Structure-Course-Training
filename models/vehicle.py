@@ -37,7 +37,7 @@ class Vehicle:
         :param spawn_time: 生成时刻
         :param route: 备用路径（内部将使用车道循环覆盖）
         """
-        self.sim = simulation
+        self.sim = simulation 
         self.origin_gate = origin_gate
         self.spawn_pos = spawn_pos
         self.target_pos = target_pos
@@ -228,7 +228,7 @@ class Vehicle:
         self.current_battery = min(self.current_battery + amount, self.target_battery_level)
 
     # 充电相关方法, 充电速度指单位时间充上的电量，当处于充电状态时，每隔。。。。。时间调用一次charge方法，代表单位时间内充电一次
-    def charge(self):
+    def charging(self):
         self.current_battery = min(self.current_battery + self.get_charging_speed(), 100)
         if self.current_battery == 100:
             self.charging_status = "charged"

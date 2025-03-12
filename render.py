@@ -99,6 +99,14 @@ class ParkRenderer(QWidget):
                 # painter.setPen(Qt.black)
                 # painter.drawText(x_pix, y_pix, debug_str)
 
+        # 绘制充电机器人
+        for robot in self.simulation.robots:
+            x_pix = robot.position[0] * self.cell_size
+            y_pix = robot.position[1] * self.cell_size
+            painter.setBrush(QColor(255, 215, 0))  # 黄色表示机器人
+            painter.drawRect(x_pix, y_pix, self.cell_size, self.cell_size)
+
+
 class ParkSimulationWindow(QMainWindow):
     def __init__(self, simulation):
         super().__init__()
