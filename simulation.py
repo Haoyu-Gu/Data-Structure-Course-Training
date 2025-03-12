@@ -16,6 +16,7 @@ import random
 
 from models.parking_spot import ParkingSpot
 from models.vehicle import Vehicle
+from models.charging_robot import ChargingRobot
 
 class Simulation:
     def __init__(self, grid_size=(50, 50), num_buildings=2, num_stations=2, num_gates=3):
@@ -40,6 +41,13 @@ class Simulation:
         self._generate_gates()
         self._generate_buildings()
         self._generate_charging_stations()
+
+        # 假设在模拟初始化时添加机器人到指定的初始位置
+        self.robots = [
+            ChargingRobot(robot_id=1, position=(10, 10), station_position=(10, 10)),
+            ChargingRobot(robot_id=2, position=(20, 20), station_position=(20, 20)),
+            ChargingRobot(robot_id=2, position=(30, 30), station_position=(25, 25)),
+        ]
 
     def _generate_inner_ring_roads(self):
         w, h = self.grid_size
@@ -292,3 +300,6 @@ class Simulation:
             v.update()
             if v.state == "exited":
                 self.vehicles.remove(v)
+        
+        for robot in self.robots:
+            robot.update()
