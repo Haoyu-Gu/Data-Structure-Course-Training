@@ -29,6 +29,8 @@ class Simulation:
         self.parking_spots = []
         self.gates = []
         self.vehicles = []
+        self.charging_stations = []
+        self.building_positions = []
 
         self.global_time = 0
         self.spawn_interval = 10
@@ -44,9 +46,9 @@ class Simulation:
 
         # 假设在模拟初始化时添加机器人到指定的初始位置
         self.robots = [
-            ChargingRobot(robot_id=1, position=(10, 10), station_position=(10, 10)),
-            ChargingRobot(robot_id=2, position=(20, 20), station_position=(20, 20)),
-            ChargingRobot(robot_id=2, position=(30, 30), station_position=(25, 25)),
+            ChargingRobot(robot_id=1, position=(10, 10), station_position=self.charging_stations),
+            ChargingRobot(robot_id=2, position=(20, 20), station_position=self.charging_stations),
+            ChargingRobot(robot_id=2, position=(30, 30), station_position=self.charging_stations),
         ]
 
     def _generate_inner_ring_roads(self):
@@ -122,14 +124,17 @@ class Simulation:
             bh = random.randint(3, 6)
             if np.all(self.map[by:by+bh, bx:bx+bw] == "S"):
                 self.map[by:by+bh, bx:bx+bw] = "B"
-
+                 # 将建筑覆盖的所有坐标点存储到列表中
+                for y in range(by, by + bh):
+                    for x in range(bx, bx + bw):
+                        self.building_positions.append((x, y))
     def _generate_charging_stations(self):
         for _ in range(self.num_stations):
             ys, xs = np.where(self.map == "S")
             if len(xs) > 0:
                 idx = random.randint(0, len(xs)-1)
                 self.map[ys[idx], xs[idx]] = "C"
-
+                self.charging_stations = list(zip(xs, ys))  # 将坐标组合成 (x, y) 的形式
     # ====== BFS 寻路（仅走 'R' 或 'G'）=====
     def _compute_path_on_road(self, start, end):
         w, h = self.grid_size
